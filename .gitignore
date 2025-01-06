@@ -1,0 +1,29 @@
+# Ignorar dependências
+front/node_modules/
+back/node_modules/
+
+# Ignorar arquivos específicos do React Native
+front/.expo/
+front/dist/
+front/web-build/
+front/expo-env.d.ts
+front/assets/
+
+# Ignorar arquivos de debug e configuração
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+.metro-health-check*
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+.DS_Store
+*.pem
+.env*.local
+*.tsbuildinfo
+
+# Outros arquivos ignorados
+app-example
