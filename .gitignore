@@ -2,12 +2,17 @@
 front/node_modules/
 back/node_modules/
 
-# Ignorar arquivos específicos do React Native
+# Ignorar arquivos específicos do Front
 front/.expo/
 front/dist/
 front/web-build/
 front/expo-env.d.ts
 front/assets/
+front/.env/
+
+# Ignorar arquivos específicos do Back
+back/node_modules/
+back/.env
 
 # Ignorar arquivos de debug e configuração
 *.orig.*

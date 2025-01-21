@@ -1,11 +1,43 @@
 import React, { useState } from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import { SafeAreaView, View, Alert } from 'react-native';
 import { Text, TextInput, Button } from 'react-native-paper';
 import Styles from '../styles/Styles';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { API_URL } from '@env';
+// import handleGoogleSignIn from '../services/SignInGoogle';
 
 export default function SignIn({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+
+    const handleSignIn = async () => {
+        try {
+            const response = await axios.post(`${API_URL}/login`, {
+                Email: email,
+                Password: password
+            }, { headers: { 'Content-Type': 'application/json' } });
+            
+            if (response.status === 200) {
+                const { token, Name, Email } = response.data;
+
+                await AsyncStorage.setItem('userToken', token);
+                await AsyncStorage.setItem('userName', Name);
+                await AsyncStorage.setItem('userEmail', Email);
+
+                Alert.alert('Sucess', 'Login realizado com sucesso!');
+
+                navigation.navigate('Home');    
+            }
+        } catch (error) {
+            if (error.response && error.response.data) {
+                Alert.alert('Error', error.response.data.msg);
+            } else {
+                Alert.alert('Error', 'Unable to connect to the server');
+            }
+            console.error(error);
+        }
+    };
 
     return (
         <SafeAreaView style={Styles.container}>
@@ -32,7 +64,7 @@ export default function SignIn({ navigation }) {
 
             <Button 
                 mode="contained" 
-                onPress={() => console.log('Login pressed')} 
+                onPress={handleSignIn} 
                 style={Styles.button}
             >
                 Log In
@@ -40,7 +72,7 @@ export default function SignIn({ navigation }) {
 
             <Button
                 mode="outlined"
-                onPress={() => console.log('Google Login pressed')}
+                // onPress={handleGoogleSignIn}
                 style={Styles.buttonGoogle}
                 icon="google"
             >

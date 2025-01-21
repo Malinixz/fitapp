@@ -1,48 +1,99 @@
-import React from 'react';
-import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
-import { Button, ProgressBar, MD3Colors } from 'react-native-paper';
-import Appbar from '../components/Appbar';
+import React, { useState } from 'react';
+import { SafeAreaView, View, Alert } from 'react-native';
+import { Text, TextInput, Button } from 'react-native-paper';
+import Styles from '../styles/Styles';
+import axios from 'axios';
+import { API_URL } from '@env';
 
 export default function SignUp({ navigation }) {
+    const [name, setName] = useState('');
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+
+    const handleSignUp = async () => {
+        if (password !== confirmPassword) {
+            console.log('Confirme a senha corretamente');
+            return;
+        }
+
+        try {
+            const response = await axios.post(`${API_URL}/registrar`, {
+                Name: name,
+                Password: password,
+                Email: email
+            }, { headers: { 'Content-Type': 'application/json' } });
+                
+            if (response.status === 200) {
+                Alert.alert(response.data.msg);
+                navigation.navigate('Welcome');
+            }
+
+        } catch (error) {
+            if (error.response && error.response.data) {
+                Alert.alert('Erro', error.response.data.msg);
+            } else {
+                Alert.alert('Erro', 'Unable to connect to the server');
+            }
+            console.error(error);
+        }
+    };
+
     return (
-        <SafeAreaView style={styles.container}>
-            {/* Appbar Fixo no Topo */}
-            <Appbar title="REGISTRE-SE" onBackPress={() => navigation.goBack()} />
-            <ProgressBar progress={0.15}/>
-            {/* Conteúdo Principal */}
-            <View style={styles.content}>
-                <Text style={styles.welcomeText}>
-                    Bem-vindo! Vamos personalizar o aplicativo de acordo com seus objetivos.
-                </Text>
-                <Button
-                    mode="contained"
-                    style={{width:'70%'}}
-                    onPress={() => navigation.navigate('Goals')}
-                >
-                    Continuar
+        <SafeAreaView style={Styles.container}>
+            <Text style={Styles.title}>Sign Up</Text>
+
+            <TextInput
+                label="Name"
+                value={name}
+                onChangeText={setName}
+                mode="outlined"
+                style={Styles.input}
+                autoCapitalize="words"
+            />
+
+            <TextInput
+                label="Email"
+                value={email}
+                onChangeText={setEmail}
+                mode="outlined"
+                style={Styles.input}
+                keyboardType="email-address"
+                autoCapitalize="none"
+            />
+            
+            <TextInput
+                label="Password"
+                value={password}
+                onChangeText={setPassword}
+                mode="outlined"
+                secureTextEntry
+                style={Styles.input}
+            />
+
+            <TextInput
+                label="Confirm Password"
+                value={confirmPassword}
+                onChangeText={setConfirmPassword}
+                mode="outlined"
+                secureTextEntry
+                style={Styles.input}
+            />
+
+            <Button 
+                mode="contained" 
+                onPress={handleSignUp} 
+                style={Styles.button}
+            >
+                Sign Up
+            </Button>
+
+            <View style={Styles.signupContainer}>
+                <Text>Already have an account? </Text>
+                <Button onPress={() => navigation.navigate('SignIn')}>
+                    Sign In
                 </Button>
             </View>
         </SafeAreaView>
     );
 }
-
-// COLOCAR EM PASTA SEPARADA
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-    },
-    content: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        paddingHorizontal: 20,
-        marginTop: -56, // Ajusta a altura do Appbar
-    },
-    welcomeText: {
-        fontSize: 18,
-        textAlign: 'center',
-        marginBottom: 20,
-        color: '#333',
-    }
-});
