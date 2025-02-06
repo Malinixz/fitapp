@@ -1,34 +1,38 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
 import { Button, Icon, ProgressBar } from 'react-native-paper';
 import Appbar from '../components/Appbar';
+import { UserContext } from '@/contexts/UserContext';
 
 export default function SignUp({ navigation }) {
-    // Estado para controlar o botão selecionado
     const [selectedButton, setSelectedButton] = useState(null);
+    const { updateUser } = useContext(UserContext);
 
-    // Função para lidar com a seleção do botão
     const handleButtonPress = (buttonTitle) => {
         setSelectedButton(buttonTitle);
     };
 
-    // Array de botões para renderização dinâmica
+    const handleContinue = () => {
+        updateUser('goal', selectedButton);
+        navigation.navigate('ActvLevel')
+    }
+    
     const buttonOptions = [
-        'Sedentário',
-        'Levemente Ativo',
-        'Moderadamente Ativo', 
-        'Muito Ativo',
-        'Extremamente Ativo'
+        'Perda de Peso Agressiva',
+        'Perda de Peso',
+        'Manter o Peso', 
+        'Ganho de Peso',
+        'Ganho de Peso Agressivo'
     ];
 
     return (
         <SafeAreaView style={styles.container}>
-            <Appbar title="Nível de Atividade" onBackPress={() => navigation.goBack()} />
-            <ProgressBar progress={0.5} />
+            <Appbar title="METAS" onBackPress={() => navigation.goBack()} />
+            <ProgressBar progress={0.3} />
 
             <View style={styles.content}>
                 <Text style={styles.guideText}>
-                    Selecione seu Nível de Atividade Física Semanal
+                    Selecione sua meta atual.
                 </Text>
 
                 <View style={styles.buttons}>
@@ -51,7 +55,7 @@ export default function SignUp({ navigation }) {
                     <Button
                     mode="contained"
                     style={{width:'70%', marginTop:50}}
-                    onPress={() => navigation.navigate('GeneralInfo')}
+                    onPress={handleContinue}
                     >
                         Continuar
                     </Button>

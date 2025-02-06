@@ -1,37 +1,26 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
+import { Button, ProgressBar } from 'react-native-paper';
 import Appbar from '../components/Appbar';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function Home({ navigation }) {
-    const [userName, setUserName] = useState('');
-
-    // Busca o nome do usuário ao carregar o componente
-    useEffect(() => {
-        const fetchUserName = async () => {
-            try {
-                const name = await AsyncStorage.getItem('userName');
-                if (name) {
-                    setUserName(name);
-                }
-            } catch (error) {
-                console.error('Erro ao carregar o nome do usuário:', error);
-            }
-        };
-
-        fetchUserName();
-    }, []);
-
+export default function SignUp({ navigation }) {
     return (
         <SafeAreaView style={styles.container}>
             {/* Appbar Fixo no Topo */}
-            <Appbar title="HOME" onBackPress={() => navigation.goBack()} />
-
+            <Appbar title="REGISTRE-SE" onBackPress={() => navigation.goBack()} />
+            <ProgressBar progress={0.15}/>
             {/* Conteúdo Principal */}
             <View style={styles.content}>
                 <Text style={styles.welcomeText}>
-                    Bem-vindo à HOME, {userName || 'Usuário'}
+                    Bem-vindo! Vamos personalizar o aplicativo de acordo com seus objetivos.
                 </Text>
+                <Button
+                    mode="contained"
+                    style={{width:'70%'}}
+                    onPress={() => navigation.navigate('Goals')}
+                >
+                    Continuar
+                </Button>
             </View>
         </SafeAreaView>
     );

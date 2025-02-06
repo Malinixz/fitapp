@@ -1,18 +1,68 @@
-import React, { useState } from 'react';
+// screens/Results.tsx
+import React, { useContext, useEffect, useState } from 'react';
 import { SafeAreaView, View, Text, StyleSheet, Dimensions } from 'react-native';
 import { Button, ProgressBar } from 'react-native-paper';
 import { PieChart } from 'react-native-chart-kit';
 import Appbar from '../components/Appbar';
+import { UserContext } from '@/contexts/UserContext';
+import { calculateBMR, calculateTDEE, calculateCalorieGoal, calculateMacros } from '../utils/NutritionCalculator';
 
 export default function ResultScreen({ navigation }) {
-    const screenWidth = Dimensions.get('window').width;
+    const { user, updateUser } = useContext(UserContext);
+    const [macros, setMacros] = useState({ protein: 0, carbs: 0, fat: 0 });
+    
+    useEffect(() => {
+        // const calculateNutrition = () => {
+        //     // Calcular idade baseado na data de nascimento ???
+        //     const age = new Date().getFullYear() - new Date(user.birthDate).getFullYear();
+            
+        //     // Cálculos em sequência
+        //     const bmr = calculateBMR(user.gender, user.weight, user.height, age);
+        //     const tdee = calculateTDEE(bmr, user.actLevel);
+        //     const calorieGoal = calculateCalorieGoal(tdee, user.goal);
+            
+        //     // Atualizar meta calórica no contexto
+        //     updateUser('calGoal', calorieGoal);
+            
+        //     // Calcular macros
+        //     const macroResults = calculateMacros( calorieGoal, user.protGoal, user.carbGoal, user.fatGoal );
+            
+        //     setMacros(macroResults);
+        // };
+        
+        // calculateNutrition();
 
-    // Dados dos macronutrientes (exemplo)
+        console.log(user)
+    }, [user]);
+
     const macronutrientsData = [
-        { name: 'Carboidratos', population: 50, color: '#f3a683', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-        { name: 'Proteínas', population: 30, color: '#778beb', legendFontColor: '#7F7F7F', legendFontSize: 15 },
-        { name: 'Gorduras', population: 20, color: '#e77f67', legendFontColor: '#7F7F7F', legendFontSize: 15 },
+        {
+            name: 'Carboidratos',
+            // population: macros.carbs,
+            population: 10,
+            color: '#f3a683',
+            legendFontColor: '#7F7F7F',
+            legendFontSize: 15
+        },
+        {
+            name: 'Proteínas',
+            // population: macros.protein,
+            population: 100,
+            color: '#778beb',
+            legendFontColor: '#7F7F7F',
+            legendFontSize: 15
+        },
+        {
+            name: 'Gorduras',
+            // population: macros.fat,
+            population: 70,
+            color: '#e77f67',
+            legendFontColor: '#7F7F7F',
+            legendFontSize: 15
+        },
     ];
+
+    const screenWidth = Dimensions.get('window').width;
 
     return (
         <SafeAreaView style={styles.container}>

@@ -1,14 +1,14 @@
 # Ignorar dependências
-front/node_modules/
+front-new/node_modules/
 back/node_modules/
 
-# Ignorar arquivos específicos do Front
-front/.expo/
-front/dist/
-front/web-build/
-front/expo-env.d.ts
-front/assets/
-front/.env/
+# Ignorar arquivos específicos do Front-new
+front-new/.expo/
+front-new/dist/
+front-new/web-build/
+front-new/expo-env.d.ts
+front-new/assets/
+front-new/.env/
 
 # Ignorar arquivos específicos do Back
 back/node_modules/

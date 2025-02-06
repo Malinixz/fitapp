@@ -1,34 +1,41 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
 import { Button, Icon, ProgressBar } from 'react-native-paper';
 import Appbar from '../components/Appbar';
+import { UserContext } from '@/contexts/UserContext';
 
 export default function SignUp({ navigation }) {
-    // Estado para controlar o botão selecionado
     const [selectedButton, setSelectedButton] = useState(null);
+    const { updateUser } = useContext(UserContext);
 
     // Função para lidar com a seleção do botão
     const handleButtonPress = (buttonTitle) => {
         setSelectedButton(buttonTitle);
     };
 
+    // Função para salvar o dado na chave de user
+    const handleContinue = () => {
+        updateUser('actvLevel', selectedButton);
+        navigation.navigate('GeneralInfo')
+    }
+
     // Array de botões para renderização dinâmica
     const buttonOptions = [
-        'Perda de Peso Agressiva',
-        'Perda de Peso',
-        'Manter o Peso', 
-        'Ganho de Peso',
-        'Ganho de Peso Agressivo'
+        'Sedentário',
+        'Levemente Ativo',
+        'Moderadamente Ativo', 
+        'Muito Ativo',
+        'Extremamente Ativo'
     ];
 
     return (
         <SafeAreaView style={styles.container}>
-            <Appbar title="METAS" onBackPress={() => navigation.goBack()} />
-            <ProgressBar progress={0.3} />
+            <Appbar title="Nível de Atividade" onBackPress={() => navigation.goBack()} />
+            <ProgressBar progress={0.5} />
 
             <View style={styles.content}>
                 <Text style={styles.guideText}>
-                    Selecione sua meta atual.
+                    Selecione seu Nível de Atividade Física Semanal
                 </Text>
 
                 <View style={styles.buttons}>
@@ -51,7 +58,7 @@ export default function SignUp({ navigation }) {
                     <Button
                     mode="contained"
                     style={{width:'70%', marginTop:50}}
-                    onPress={() => navigation.navigate('ActvLevel')}
+                    onPress={handleContinue}
                     >
                         Continuar
                     </Button>

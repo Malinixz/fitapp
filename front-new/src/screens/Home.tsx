@@ -1,26 +1,22 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
-import { Button, ProgressBar } from 'react-native-paper';
 import Appbar from '../components/Appbar';
+import { useUser } from '@clerk/clerk-expo';
 
-export default function SignUp({ navigation }) {
+export default function Home({ navigation }) {
+    const { user } = useUser(); // Obtém as informações do usuário autenticado diretamente do Clerk.
+
     return (
         <SafeAreaView style={styles.container}>
             {/* Appbar Fixo no Topo */}
-            <Appbar title="REGISTRE-SE" onBackPress={() => navigation.goBack()} />
-            <ProgressBar progress={0.15}/>
+            <Appbar title="HOME" onBackPress={() => navigation.goBack()} />
+
             {/* Conteúdo Principal */}
             <View style={styles.content}>
                 <Text style={styles.welcomeText}>
-                    Bem-vindo! Vamos personalizar o aplicativo de acordo com seus objetivos.
+                    {/* Exibe o nome do usuário, se disponível */}
+                    Bem-vindo à HOME, {user?.firstName }
                 </Text>
-                <Button
-                    mode="contained"
-                    style={{width:'70%'}}
-                    onPress={() => navigation.navigate('Goals')}
-                >
-                    Continuar
-                </Button>
             </View>
         </SafeAreaView>
     );

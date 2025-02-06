@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "fitapp",
-    "slug": "fitapp",
+    "name": "front-new",
+    "slug": "front-new",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -15,8 +15,7 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      },
-      "package": "com.miguel.fitapp"
+      }
     },
     "web": {
       "bundler": "metro",

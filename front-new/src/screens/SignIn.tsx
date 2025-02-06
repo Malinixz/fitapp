@@ -1,21 +1,56 @@
-import React, { useState } from 'react';
-import { SafeAreaView, View, Alert } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { SafeAreaView, View, Alert, ActivityIndicator } from 'react-native';
 import { Text, TextInput, Button } from 'react-native-paper';
 import Styles from '../styles/Styles';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { API_URL } from '@env';
-// import handleGoogleSignIn from '../services/SignInGoogle';
+import * as WebBrowser from 'expo-web-browser';
+import { useOAuth } from "@clerk/clerk-expo";
+
+WebBrowser.maybeCompleteAuthSession();
 
 export default function SignIn({ navigation }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [loading, setLoading] = useState(false);
+    const googleOAuth = useOAuth({ strategy: 'oauth_google' });
+
+    useEffect(() => {
+        WebBrowser.warmUpAsync();
+        return () => {
+            WebBrowser.coolDownAsync();
+        };
+    }, []);
+
+    const handleGoogleSignIn = async () => {
+        setLoading(true);
+        try {
+            const oAuthFlow = await googleOAuth.startOAuthFlow();
+            if (oAuthFlow.authSessionResult?.type === "success") {
+                if (oAuthFlow.setActive) {
+                    await oAuthFlow.setActive({ session: oAuthFlow.createdSessionId });
+                }
+                // Logica para persistencia
+                // ???
+                
+                navigation.navigate('Home');
+            }
+        } catch (error) {
+            Alert.alert('Error', 'Google sign-in failed. Please try again.');
+            console.error(error);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const handleSignIn = async () => {
+        setLoading(true);
+        console.log(API_URL)
         try {
             const response = await axios.post(`${API_URL}/login`, {
                 Email: email,
-                Password: password
+                Password: password,
             }, { headers: { 'Content-Type': 'application/json' } });
             
             if (response.status === 200) {
@@ -25,23 +60,23 @@ export default function SignIn({ navigation }) {
                 await AsyncStorage.setItem('userName', Name);
                 await AsyncStorage.setItem('userEmail', Email);
 
-                Alert.alert('Sucess', 'Login realizado com sucesso!');
-
-                navigation.navigate('Home');    
+                Alert.alert('Success', 'Login realizado com sucesso!');
+                navigation.navigate('Welcome');
             }
         } catch (error) {
-            if (error.response && error.response.data) {
-                Alert.alert('Error', error.response.data.msg);
-            } else {
-                Alert.alert('Error', 'Unable to connect to the server');
-            }
+            const errorMessage = error.response?.data?.msg || 'Unable to connect to the server';
+            Alert.alert('Error', errorMessage);
             console.error(error);
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
         <SafeAreaView style={Styles.container}>
             <Text style={Styles.title}>Sign In</Text>
+
+            {loading && <ActivityIndicator size="large" color="#6200ee" />}
 
             <TextInput
                 label="Email"
@@ -66,15 +101,17 @@ export default function SignIn({ navigation }) {
                 mode="contained" 
                 onPress={handleSignIn} 
                 style={Styles.button}
+                disabled={loading}
             >
                 Log In
             </Button>
 
             <Button
                 mode="outlined"
-                // onPress={handleGoogleSignIn}
+                onPress={handleGoogleSignIn}
                 style={Styles.buttonGoogle}
                 icon="google"
+                disabled={loading}
             >
                 Log In with Google
             </Button>
