@@ -8,7 +8,7 @@ front-new/dist/
 front-new/web-build/
 front-new/expo-env.d.ts
 front-new/assets/
-front-new/.env/
+front-new/.env
 
 # Ignorar arquivos específicos do Back
 back/node_modules/
