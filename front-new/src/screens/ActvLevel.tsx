@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
+import { SafeAreaView, View, Text, StyleSheet, Alert } from 'react-native';
 import { Button, Icon, ProgressBar } from 'react-native-paper';
 import Appbar from '../components/Appbar';
 import { UserContext } from '@/contexts/UserContext';
@@ -15,6 +15,10 @@ export default function SignUp({ navigation }) {
 
     // Função para salvar o dado na chave de user
     const handleContinue = () => {
+        if (!selectedButton) {
+            Alert.alert("Campo Obrigatório", "Por favor, escolha uma opção.");
+            return;
+        }
         updateUser('actvLevel', selectedButton);
         navigation.navigate('GeneralInfo')
     }

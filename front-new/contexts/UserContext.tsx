@@ -8,14 +8,14 @@ function UserProvider({ children }){
   const [user, setUser] = useState({
     gender: '',
     birthDate: '',
-    weight: '',
-    height: '',
+    weight: 0,
+    height: 0,
     actvLevel: '',
     goal: '',
-    protGoal: '',
-    carbGoal: '',
-    fatGoal: '',
-    calGoal: '',
+    protGoal: 0,
+    carbGoal: 0,
+    fatGoal: 0,
+    calGoal: 0,
   });
 
   const updateUser = (key, value) => {

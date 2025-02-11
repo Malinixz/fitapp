@@ -1,62 +1,39 @@
 // screens/Results.tsx
 import React, { useContext, useEffect, useState } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, Dimensions } from 'react-native';
-import { Button, ProgressBar } from 'react-native-paper';
+import { SafeAreaView, View, Text, StyleSheet, Dimensions, Alert } from 'react-native';
+import { Button, ProgressBar, useTheme } from 'react-native-paper';
 import { PieChart } from 'react-native-chart-kit';
 import Appbar from '../components/Appbar';
 import { UserContext } from '@/contexts/UserContext';
-import { calculateBMR, calculateTDEE, calculateCalorieGoal, calculateMacros } from '../utils/NutritionCalculator';
+import { calculateNutrition } from '../utils/NutritionCalculator';
 
 export default function ResultScreen({ navigation }) {
     const { user, updateUser } = useContext(UserContext);
-    const [macros, setMacros] = useState({ protein: 0, carbs: 0, fat: 0 });
+    const { colors } = useTheme();
     
     useEffect(() => {
-        // const calculateNutrition = () => {
-        //     // Calcular idade baseado na data de nascimento ???
-        //     const age = new Date().getFullYear() - new Date(user.birthDate).getFullYear();
-            
-        //     // Cálculos em sequência
-        //     const bmr = calculateBMR(user.gender, user.weight, user.height, age);
-        //     const tdee = calculateTDEE(bmr, user.actLevel);
-        //     const calorieGoal = calculateCalorieGoal(tdee, user.goal);
-            
-        //     // Atualizar meta calórica no contexto
-        //     updateUser('calGoal', calorieGoal);
-            
-        //     // Calcular macros
-        //     const macroResults = calculateMacros( calorieGoal, user.protGoal, user.carbGoal, user.fatGoal );
-            
-        //     setMacros(macroResults);
-        // };
-        
-        // calculateNutrition();
-
-        console.log(user)
-    }, [user]);
+        calculateNutrition( user, updateUser );
+    }, []);
 
     const macronutrientsData = [
         {
-            name: 'Carboidratos',
-            // population: macros.carbs,
-            population: 10,
-            color: '#f3a683',
+            name: 'g Proteína',
+            population: user.protGoal,
+            color: '#4a148c',
             legendFontColor: '#7F7F7F',
             legendFontSize: 15
         },
         {
-            name: 'Proteínas',
-            // population: macros.protein,
-            population: 100,
-            color: '#778beb',
+            name: 'g Carboidrato',
+            population: user.carbGoal,
+            color: '#ab47bc',
             legendFontColor: '#7F7F7F',
             legendFontSize: 15
         },
         {
-            name: 'Gorduras',
-            // population: macros.fat,
-            population: 70,
-            color: '#e77f67',
+            name: 'g Gordura',
+            population: user.fatGoal,
+            color: '#ce93d8',
             legendFontColor: '#7F7F7F',
             legendFontSize: 15
         },
@@ -70,13 +47,18 @@ export default function ResultScreen({ navigation }) {
             <ProgressBar progress={1} />
 
             <View style={styles.content}>
-                <Text style={styles.guideText}>
-                    Sua meta calórica diária foi calculada com sucesso!
-                </Text>
+                <View style={styles.calorieGoalContainer}>
+                    <Text style={styles.calorieGoalText}>
+                        Sua meta calórica diária foi calculada :
+                    </Text>
+                    <Text style={styles.calorieGoalNumber}>
+                        {user.calGoal} Kcal
+                    </Text>
+                </View>
 
                 <PieChart
                     data={macronutrientsData}
-                    width={screenWidth - 40}
+                    width={screenWidth - 30}
                     height={220}
                     chartConfig={{
                         backgroundColor: '#1cc910',
@@ -86,14 +68,14 @@ export default function ResultScreen({ navigation }) {
                     }}
                     accessor="population"
                     backgroundColor="transparent"
-                    paddingLeft="15"
+                    paddingLeft="0"
                     absolute
                 />
 
                 <Button
                     mode="contained-tonal"
                     style={styles.editButton}
-                    onPress={() => navigation.navigate('EditGoals')}
+                    onPress={() => Alert.alert("Funcionalidade não implementada")}
                 >
                     Editar Metas
                 </Button>
@@ -116,14 +98,29 @@ const styles = StyleSheet.create({
     },
     content: {
         flex: 1,
-        justifyContent: 'center',
         alignItems: 'center',
         padding: 20,
+        paddingTop: 40, // Espaço superior aumentado
     },
-    guideText: {
-        fontSize: 18,
+    calorieGoalContainer: {
+        marginBottom: 20,
+        padding: 15, // Aumentado o padding
+        backgroundColor: '#f0f0f0',
+        borderRadius: 12, // Bordas mais arredondadas
+        alignItems: 'center',
+    },
+    calorieGoalText: {
+        fontSize: 20, // Texto maior
         textAlign: 'center',
-        marginVertical: 20,
+        color: '#333',
+        fontWeight: 'bold', // Texto em negrito
+    },
+    calorieGoalNumber: {
+        fontSize: 30, // Texto maior
+        textAlign: 'center',
+        fontWeight: 'bold', // Texto em negrito
+        marginTop: 10,
+        color: '#6219EE'
     },
     editButton: {
         width: '70%',

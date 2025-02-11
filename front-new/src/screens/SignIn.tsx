@@ -48,7 +48,8 @@ export default function SignIn({ navigation }) {
         setLoading(true);
         console.log(API_URL)
         try {
-            const response = await axios.post(`${API_URL}/login`, {
+            // const response = await axios.post(`${API_URL}/login`, {
+            const response = await axios.post(`http://192.168.68.113:3000/login`, {
                 Email: email,
                 Password: password,
             }, { headers: { 'Content-Type': 'application/json' } });

@@ -1,10 +1,11 @@
 import React, { useContext, useState } from 'react';
-import { SafeAreaView, View, Text, StyleSheet, KeyboardAvoidingView, ScrollView, Platform } from 'react-native';
+import { SafeAreaView, View, Text, StyleSheet, KeyboardAvoidingView, ScrollView, Platform, Alert } from 'react-native';
 import { Button, Icon, ProgressBar, TextInput } from 'react-native-paper';
 import { TextInputMask } from 'react-native-masked-text';
 import Appbar from '../components/Appbar';
 import { UserContext } from '@/contexts/UserContext';
 import { convertToDate } from '../utils/Dates';
+import moment from 'moment'; // Importe o moment
 
 export default function SignUp({ navigation }) {
     const [selectedButton, setSelectedButton] = useState(null);
@@ -18,8 +19,20 @@ export default function SignUp({ navigation }) {
     };
 
     const handleContinue = () => {
+        const parsedBirthDate = convertToDate(birthDate);
+
+        if (!selectedButton || !birthDate || !weight || !height) {
+            Alert.alert("Campos Obrigatórios", "Por favor, preencha todos os campos.");
+            return;
+        }
+
+        if (!moment(parsedBirthDate).isValid()) { // Validação da data
+            Alert.alert("Data Inválida", "Por favor, insira uma data de nascimento válida.");
+            return;
+        }
+
         updateUser('gender', selectedButton);
-        updateUser('birthDate', convertToDate(birthDate));
+        updateUser('birthDate', parsedBirthDate);
         updateUser('weight', parseFloat(weight));
         updateUser('height', parseFloat(height));
         navigation.navigate('Results');
@@ -79,7 +92,9 @@ export default function SignUp({ navigation }) {
                     <TextInput
                         label="Peso (kg)"
                         value={weight}
-                        onChangeText={setWeight}
+                        onChangeText={(text) => {
+                            setWeight(text.slice(0, 3)); // Limita a 3 dígitos
+                        }}
                         mode="outlined"
                         style={styles.input}
                         keyboardType="numeric"
@@ -87,7 +102,9 @@ export default function SignUp({ navigation }) {
                     <TextInput
                         label="Altura (cm)"
                         value={height}
-                        onChangeText={setHeight}
+                        onChangeText={(text) => {
+                            setHeight(text.slice(0, 3)); // Limita a 3 dígitos
+                        }}
                         mode="outlined"
                         style={styles.input}
                         keyboardType="numeric"
