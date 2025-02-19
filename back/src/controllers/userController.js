@@ -29,6 +29,7 @@ exports.loginUser = async (req, res) => {
             token: jwt_token,
             Name: user.Name,
             Email: user.Email,
+            CompleteProfile: user.CompleteProfile // Indica se o perfil esta completo
         });
 
     } catch (error) {
@@ -61,8 +62,8 @@ exports.registerUser = async (req, res) => {
 };
 
 exports.completeUserProfile = async (req, res) => {
-    const { Email, ProtGoal, CarbGoal, FatGoal, CalGoal, Weight, Height, Age, FitnessLvl } = req.body;
-
+    const { Email, ProtGoal, CarbGoal, FatGoal, CalGoal, Weight, Height, BirthDate, ActvLevel, Gender, Goal } = req.body;
+    // ALTERAR FITNESS LVL PARA ACTV LEVEL, INSERIR CAMPOS GENDER E GOAL
     try {
         const user = await User.findOne({ where: { Email } });
 
@@ -78,8 +79,11 @@ exports.completeUserProfile = async (req, res) => {
             CalGoal,
             Weight,
             Height,
-            Age,
-            FitnessLvl,
+            BirthDate,
+            ActvLevel,
+            Gender,
+            Goal,
+            CompleteProfile: true
         });
 
         res.status(200).send({ sucesso: 1, msg: "Perfil complementado com sucesso!" });

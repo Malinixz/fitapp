@@ -21,7 +21,7 @@ const User = sequelize.define('User', {
             'Ganho de Peso Agressivo'
         )
     },
-    FitnessLvl: { 
+    ActvLevel: { 
         type: DataTypes.ENUM(
             'Sedentário',
             'Levenmente Ativo',
@@ -40,6 +40,10 @@ const User = sequelize.define('User', {
         type: DataTypes.STRING,
         allowNull: false,
     },
+    CompleteProfile: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false
+    },
     Password: DataTypes.STRING,
     ProtGoal: DataTypes.INTEGER,
     CarbGoal: DataTypes.INTEGER,
@@ -47,7 +51,7 @@ const User = sequelize.define('User', {
     CalGoal: DataTypes.INTEGER,
     Weight: DataTypes.FLOAT,
     Height: DataTypes.FLOAT,
-    Age: DataTypes.INTEGER,
+    BirthDate: DataTypes.DATE
 });
 
 module.exports = User;

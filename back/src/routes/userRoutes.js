@@ -12,6 +12,6 @@ router.post('/token'  , auth.authToken, (req,res) => {res.status(200).send({suce
 router.put('/edit-name'    , auth.authToken, verifyParams(['novo_login']), userController.editName);
 router.put('/edit-email'   , auth.authToken, verifyParams(['novo_email']), userController.editEmail);
 router.put('/edit-password', auth.authToken, verifyParams(['senha_atual','nova_senha']), userController.editPassword);
-router.put("/complete-profile", auth.authToken, verifyParams(['Email', 'ProtGoal', 'CarbGoal', 'FatGoal', 'CalGoal', 'Weight', 'Height', 'Age', 'FitnessLvl']), userController.completeUserProfile);
+router.put("/complete-profile", auth.authToken, verifyParams(['ProtGoal', 'CarbGoal', 'FatGoal', 'CalGoal', 'Weight', 'Height', 'BirthDate', 'ActvLevel']), userController.completeUserProfile);
 
 module.exports = router;
