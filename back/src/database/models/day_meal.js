@@ -11,9 +11,13 @@ const DayMeal = sequelize.define('Day_Meal', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  ID_Meal: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
+  Name: {
+    type: DataTypes.ENUM(
+      'Café da Manhã',
+      'Almoço',
+      'Janta',
+      'Lanches',
+    )
   }
 });
 

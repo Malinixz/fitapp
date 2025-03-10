@@ -7,15 +7,19 @@ const Day = sequelize.define('Day', {
     primaryKey: true,
     autoIncrement: true,
   },
-  Date: DataTypes.DATE,
+  Date: DataTypes.DATEONLY,
   ID_User: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
   ProtTotal: DataTypes.INTEGER,
+  ProtGoal: DataTypes.INTEGER,
   CarbTotal: DataTypes.INTEGER,
+  CarbGoal: DataTypes.INTEGER,
   FatTotal: DataTypes.INTEGER,
-  CaloriesTotal: DataTypes.INTEGER
+  FatGoal: DataTypes.INTEGER,
+  CaloriesTotal: DataTypes.INTEGER,
+  CaloriesGoal: DataTypes.INTEGER
 });
 
 module.exports = Day;

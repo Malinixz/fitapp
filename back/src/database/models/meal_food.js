@@ -7,15 +7,46 @@ const MealFood = sequelize.define('Meal_Food', {
     primaryKey: true,
     autoIncrement: true,
   },
-  ID_Meal: {
+  Name: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  ID_Day_Meal: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  ID_Serving: {
+  ID_Food_API: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  Quantity: DataTypes.INTEGER
+  Serving: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  Serving_Quantity: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  Serving_Total: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  Calories: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+  },
+  Prot: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+  Carb: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
+  Fat: {
+    type: DataTypes.FLOAT,
+    allowNull: false,
+  },
 });
 
 module.exports = MealFood;

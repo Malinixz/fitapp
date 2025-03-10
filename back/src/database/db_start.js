@@ -5,7 +5,6 @@ const Day_Meal = require('./models/day_meal')
 const Connections = require('./models/connections')
 const Food = require('./models/food')
 const Meal_Food = require('./models/meal_food')
-const Meal = require('./models/meal')
 const Serving = require('./models/serving')
 const Weight_Updates = require('./models/weight_updates')
 

@@ -20,43 +20,25 @@ Day.belongsTo(User, {
   foreignKey: 'ID_User',
 });
 
-// 2. Day - Meal (N:N via DayMeal)
-Day.belongsToMany(Meal, {
-  through: DayMeal,
+// 2. Day - DayMeal (1:N)
+Day.hasMany(DayMeal, {
+  foreignKey: 'ID_Day',
+  onDelete: 'CASCADE',
+});
+DayMeal.belongsTo(Day, {
   foreignKey: 'ID_Day',
 });
-Meal.belongsToMany(Day, {
-  through: DayMeal,
-  foreignKey: 'ID_Meal',
-});
 
-// 3. Meal - MealFood (1:N)
-Meal.hasMany(MealFood, {
-  foreignKey: 'ID_Meal',
+// 3. DayMeal - MealFood (1:N)
+DayMeal.hasMany(MealFood, {
+  foreignKey: 'ID_Day_Meal',
   onDelete: 'CASCADE',
 });
-MealFood.belongsTo(Meal, {
-  foreignKey: 'ID_Meal',
+MealFood.belongsTo(DayMeal, {
+  foreignKey: 'ID_Day_Meal',
 });
 
-// 4. MealFood - Serving (N:1)
-Serving.hasMany(MealFood, {
-  foreignKey: 'ID_Serving',
-});
-MealFood.belongsTo(Serving, {
-  foreignKey: 'ID_Serving',
-});
-
-// 5. Serving - Food (1:1)
-Food.hasOne(Serving, {
-  foreignKey: 'ID_Food',
-  onDelete: 'CASCADE',
-});
-Serving.belongsTo(Food, {
-  foreignKey: 'ID_Food',
-});
-
-// 6. User - WeightUpdates (1:N)
+// 4. User - WeightUpdates (1:N)
 User.hasMany(WeightUpdates, {
   foreignKey: 'User_ID',
   onDelete: 'CASCADE',
@@ -65,7 +47,7 @@ WeightUpdates.belongsTo(User, {
   foreignKey: 'User_ID',
 });
 
-// 7. User - Connections (N:N via Connections)
+// 5. User - Connections (N:N via Connections)
 User.belongsToMany(User, {
   through: Connections,
   as: 'Connections',

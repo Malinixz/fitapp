@@ -16,7 +16,7 @@ exports.authToken = async (req, res, next) => {
             const verifyUser = await User.findByPk(decodedUser.id);  // Busca o usuário
 
             if (verifyUser) {
-                req.user = verifyUser; // Adiciona o usuário à requisição
+                req.user = verifyUser.dataValues; // Adiciona o usuário à requisição
                 next();
             } else {
                 return res.status(402).json({ sucesso: 0, msg: "Usuário não encontrado" });
