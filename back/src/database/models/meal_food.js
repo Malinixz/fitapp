@@ -11,7 +11,7 @@ const MealFood = sequelize.define('Meal_Food', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  ID_Day_Meal: {
+  ID_Meal: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
@@ -36,15 +36,15 @@ const MealFood = sequelize.define('Meal_Food', {
     allowNull: false,
   },
   Prot: {
-    type: DataTypes.FLOAT,
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
   Carb: {
-    type: DataTypes.FLOAT,
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
   Fat: {
-    type: DataTypes.FLOAT,
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
 });

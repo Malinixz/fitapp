@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/db');
 
-const DayMeal = sequelize.define('Day_Meal', {
+const Meal = sequelize.define('Meal', {
   ID: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -18,7 +18,11 @@ const DayMeal = sequelize.define('Day_Meal', {
       'Janta',
       'Lanches',
     )
-  }
+  },
+  Calories: DataTypes.INTEGER,
+  Prot: DataTypes.INTEGER,
+  Carb: DataTypes.INTEGER,
+  Fat: DataTypes.INTEGER,
 });
 
-module.exports = DayMeal;
+module.exports = Meal;

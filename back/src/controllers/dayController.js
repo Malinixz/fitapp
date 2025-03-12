@@ -1,5 +1,6 @@
 const Day = require('../database/models/day');
-const DayMeal = require('../database/models/day_meal');
+const Meal = require('../database/models/meal');
+const MealFood = require('../database/models/meal_food');
 
 exports.createDay = async (req, res) => {
     const { Date, ProtTotal, ProtGoal, CarbTotal, CarbGoal, FatTotal, FatGoal, CaloriesTotal, CaloriesGoal } = req.body;
@@ -28,7 +29,7 @@ exports.createDay = async (req, res) => {
         // Cria as refeições padrão para o novo dia
         const mealNames = ['Café da Manhã', 'Almoço', 'Janta', 'Lanches'];
         for (const mealName of mealNames) {
-          await DayMeal.create({
+          await Meal.create({
             ID_Day: newDay.ID, // Use o ID do dia recém-criado
             Name: mealName,
           });
@@ -122,3 +123,26 @@ exports.updateDayGoals = async (req, res) => {
         res.status(500).json({ sucesso: 0, msg: "Erro ao atualizar dia: " + err.message });
     }
 };
+
+exports.getDayDetails = async (req, res) => {
+    const { ID } = req.params;
+  
+    try {
+      const day = await Day.findByPk(ID, {
+        include: [
+          {
+            model: Meal,
+            include: [MealFood], // Inclui os alimentos de cada refeição
+          },
+        ],
+      });
+  
+      if (!day) {
+        return res.status(404).json({ sucesso: 0, msg: "Dia não encontrado." });
+      }
+  
+      res.status(200).json({ sucesso: 1, data: day });
+    } catch (err) {
+      res.status(500).json({ sucesso: 0, msg: "Erro ao buscar detalhes do dia: " + err.message });
+    }
+  };

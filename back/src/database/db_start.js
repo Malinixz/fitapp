@@ -1,12 +1,11 @@
 const sequelize = require('./config/db'); // Importa a configuração do Sequelize
 const User = require('./models/user')
 const Day = require('./models/day')
-const Day_Meal = require('./models/day_meal')
 const Connections = require('./models/connections')
-const Food = require('./models/food')
-const Meal_Food = require('./models/meal_food')
-const Serving = require('./models/serving')
-const Weight_Updates = require('./models/weight_updates')
+const MealFood = require('./models/meal_food')
+const Meal = require('./models/meal')
+const WeightUpdates = require('./models/weight_updates')
+require('./models/relationships'); // Relações
 
 // Função para inicializar o Sequelize e sincronizar os modelos
 exports.initializeDatabase = async () => {
@@ -15,8 +14,8 @@ exports.initializeDatabase = async () => {
         console.log('Conexão ao banco de dados bem-sucedida.');
         
         // Sincroniza todos os modelos
-        // await sequelize.sync({ alter: true }); 
-        // console.log('Banco de Dados sincronizado com sucesso.');
+        await sequelize.sync({ alter: true }); 
+        console.log('Banco de Dados sincronizado com sucesso.');
     } catch (error) {
         console.error('Erro ao conectar ao banco de dados ou sincronizar: ', error);
     }
