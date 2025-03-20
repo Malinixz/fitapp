@@ -12,12 +12,12 @@ const Day = sequelize.define('Day', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  ProtTotal: DataTypes.INTEGER,
-  ProtGoal: DataTypes.INTEGER,
-  CarbTotal: DataTypes.INTEGER,
-  CarbGoal: DataTypes.INTEGER,
-  FatTotal: DataTypes.INTEGER,
-  FatGoal: DataTypes.INTEGER,
+  ProtTotal: DataTypes.FLOAT(4,1),
+  ProtGoal: DataTypes.FLOAT(4,1),
+  CarbTotal: DataTypes.FLOAT(4,1),
+  CarbGoal: DataTypes.FLOAT(4,1),
+  FatTotal: DataTypes.FLOAT(4,1),
+  FatGoal: DataTypes.FLOAT(4,1),
   CaloriesTotal: DataTypes.INTEGER,
   CaloriesGoal: DataTypes.INTEGER
 });

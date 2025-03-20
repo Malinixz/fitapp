@@ -5,7 +5,7 @@ const Connections = require('./models/connections')
 const MealFood = require('./models/meal_food')
 const Meal = require('./models/meal')
 const WeightUpdates = require('./models/weight_updates')
-require('./models/relationships'); // Relações
+require('./models/relationships/relationships'); // Relações
 
 // Função para inicializar o Sequelize e sincronizar os modelos
 exports.initializeDatabase = async () => {

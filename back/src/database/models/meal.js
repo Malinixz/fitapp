@@ -19,10 +19,26 @@ const Meal = sequelize.define('Meal', {
       'Lanches',
     )
   },
-  Calories: DataTypes.INTEGER,
-  Prot: DataTypes.INTEGER,
-  Carb: DataTypes.INTEGER,
-  Fat: DataTypes.INTEGER,
+  Calories: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
+  Prot: {
+    type: DataTypes.FLOAT(4,1),
+    allowNull: false,
+    defaultValue: 0
+  },
+  Carb: {
+    type: DataTypes.FLOAT(4,1),
+    allowNull: false,
+    defaultValue: 0
+  },
+  Fat: {
+    type: DataTypes.FLOAT(4,1),
+    allowNull: false,
+    defaultValue: 0
+  },
 });
 
 module.exports = Meal;

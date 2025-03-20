@@ -50,7 +50,7 @@ exports.addFood = async (req, res) => {
       }, { transaction: t });  
   
       await t.commit();
-      res.status(201).json({ sucesso: 1, msg: "Alimento adicionado com sucesso!", data: newFood });
+      res.status(200).json({ sucesso: 1, msg: "Alimento adicionado com sucesso!", data: newFood });
     } catch (err) {
       await t.rollback();
       res.status(500).json({ sucesso: 0, msg: "Erro ao adicionar alimento: " + err.message });

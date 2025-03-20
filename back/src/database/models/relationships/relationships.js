@@ -1,9 +1,9 @@
-const User = require('./user');
-const Day = require('./day');
-const Meal = require('./meal');
-const MealFood = require('./meal_food');
-const WeightUpdates = require('./weight_updates');
-const Connections = require('./connections');
+const User = require('../user');
+const Day = require('../day');
+const Meal = require('../meal');
+const MealFood = require('../meal_food');
+const WeightUpdates = require('../weight_updates');
+const Connections = require('../connections');
 // const Messages = require('./messages');  //???
 
 // Relacionamentos

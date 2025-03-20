@@ -48,7 +48,7 @@ const User = sequelize.define('User', {
     ProtGoal: DataTypes.INTEGER,
     CarbGoal: DataTypes.INTEGER,
     FatGoal: DataTypes.INTEGER,
-    CalGoal: DataTypes.INTEGER,
+    CaloriesGoal: DataTypes.INTEGER,
     Weight: DataTypes.FLOAT,
     Height: DataTypes.FLOAT,
     BirthDate: DataTypes.DATEONLY

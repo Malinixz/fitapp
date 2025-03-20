@@ -16,7 +16,7 @@ const MealFood = sequelize.define('Meal_Food', {
     allowNull: false,
   },
   ID_Food_API: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.STRING,
     allowNull: false,
   },
   Serving: {
@@ -24,7 +24,7 @@ const MealFood = sequelize.define('Meal_Food', {
     allowNull: false,
   },
   Serving_Quantity: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.FLOAT,
     allowNull: false,
   },
   Serving_Total: {
@@ -34,18 +34,22 @@ const MealFood = sequelize.define('Meal_Food', {
   Calories: {
     type: DataTypes.INTEGER,
     allowNull: false,
+    defaultValue: 0
   },
   Prot: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.FLOAT(4,1),
     allowNull: false,
+    defaultValue: 0
   },
   Carb: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.FLOAT(4,1),
     allowNull: false,
+    defaultValue: 0
   },
   Fat: {
-    type: DataTypes.INTEGER,
+    type: DataTypes.FLOAT(4,1),
     allowNull: false,
+    defaultValue: 0
   },
 });
 
