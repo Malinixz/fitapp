@@ -1,0 +1,16 @@
+export interface User {
+    Email: string,
+    Name: string,
+    Gender: string,
+    BirthDate: string,
+    Weight: number,
+    Height: number,
+    ActvLevel: string,
+    Goal: string,
+    ProtGoal: number,
+    CarbGoal: number,
+    FatGoal: number,
+    CaloriesGoal: number,
+    StepsGoal: number,
+    CompleteProfile: boolean,
+}
