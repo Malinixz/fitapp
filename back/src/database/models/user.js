@@ -51,7 +51,11 @@ const User = sequelize.define('User', {
     CaloriesGoal: DataTypes.INTEGER,
     Weight: DataTypes.FLOAT,
     Height: DataTypes.FLOAT,
-    BirthDate: DataTypes.DATEONLY
+    BirthDate: DataTypes.DATEONLY,
+    StepsGoal: {
+        type : DataTypes.INTEGER,
+        defaultValue : 7000
+    }
 });
 
 module.exports = User;

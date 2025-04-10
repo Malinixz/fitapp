@@ -19,6 +19,8 @@ async function createDefaultDay(Date, user) {
         FatGoal: user.FatGoal,
         CaloriesTotal: 0,
         CaloriesGoal: user.CaloriesGoal,
+        Steps: 0,
+        StepsGoal: user.StepsGoal,
       }, { transaction : t });
 
       // Cria as refeições default  
@@ -42,7 +44,7 @@ exports.getAllDays = async (req, res) => {
     const ID_User = req.user.ID;
 
     try {
-        const days = await Day.findAll({ where: { ID_User } });
+        const days = await Day.findAll({ where: { ID_User },order: [['Date', 'DESC']] });
 
         if (days.length === 0) {
             return res.status(404).json({ sucesso: 0, msg: "Nenhum dia encontrado para este usuário." });
@@ -64,7 +66,10 @@ exports.getDayDetails = async (req, res) => {
         include: [
           { 
             model: Meal, // INCLUI AS REFEIÇÕES RELACIONADAS AO DIA
-            include: [MealFood] }], // INCLUI OS ALIMENTOS DESSA REFEIÇÃO
+            include: [MealFood] 
+          }
+        ],
+        order: [[Meal,'ID', 'ASC']],
       });
 
       if (!day) {
@@ -78,7 +83,13 @@ exports.getDayDetails = async (req, res) => {
         
         day = await Day.findOne({
           where: { ID_User, Date },
-          include: [{ model: Meal, include: [MealFood] }],
+          include: [
+            { 
+              model: Meal, 
+              order: [['ID', 'ASC']],
+              include: [MealFood] 
+            }
+          ],
         });
       }
 
@@ -137,3 +148,24 @@ exports.updateDayGoals = async (req, res) => {
         res.status(500).json({ sucesso: 0, msg: "Erro ao atualizar dia: " + err.message });
     }
 };
+
+exports.updateDaySteps = async (req, res) => {
+    const { Date } = req.params
+    const { Steps } = req.body
+    const ID_User = req.user.ID;
+    try {
+      const day = await Day.findOne({ where: { Date, ID_User } });
+
+      if (!day) {
+          return res.status(404).json({ sucesso: 0, msg: "Dia não encontrado." });
+      }
+
+      await day.update({
+          Steps
+      });
+
+      res.status(200).json({ sucesso: 1, msg: "Passos diários atualizados com sucesso!"});
+    } catch (err) {
+        res.status(500).json({ sucesso: 0, msg: "Erro ao atualizar dia: " + err.message });
+    }
+}

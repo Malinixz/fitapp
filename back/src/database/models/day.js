@@ -12,14 +12,22 @@ const Day = sequelize.define('Day', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  ProtTotal: DataTypes.FLOAT(4,1),
-  ProtGoal: DataTypes.FLOAT(4,1),
-  CarbTotal: DataTypes.FLOAT(4,1),
-  CarbGoal: DataTypes.FLOAT(4,1),
-  FatTotal: DataTypes.FLOAT(4,1),
-  FatGoal: DataTypes.FLOAT(4,1),
+  ProtTotal: DataTypes.FLOAT,
+  ProtGoal: DataTypes.FLOAT,
+  CarbTotal: DataTypes.FLOAT,
+  CarbGoal: DataTypes.FLOAT,
+  FatTotal: DataTypes.FLOAT,
+  FatGoal: DataTypes.FLOAT,
   CaloriesTotal: DataTypes.INTEGER,
-  CaloriesGoal: DataTypes.INTEGER
+  CaloriesGoal: DataTypes.INTEGER,
+  Steps: {
+    type : DataTypes.INTEGER,
+    defaultValue : 0
+  },
+  StepsGoal: {
+    type : DataTypes.INTEGER,
+    defaultValue : 7000
+  }
 });
 
 module.exports = Day;

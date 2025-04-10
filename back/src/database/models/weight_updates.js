@@ -11,9 +11,8 @@ const WeightUpdates = sequelize.define('Weight_Updates', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  Date: DataTypes.DATE,
+  Date: DataTypes.DATEONLY,
   Weight: DataTypes.FLOAT,
-  Notes: DataTypes.STRING
 });
 
 module.exports = WeightUpdates;

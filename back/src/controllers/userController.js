@@ -1,7 +1,9 @@
 const User = require('../database/models/user');
+const WeightUpdates = require('../database/models/weight_updates');
 const bcrypt = require('bcrypt');
 const dotenv = require('dotenv');
 const jwt = require("jsonwebtoken");
+const sequelize = require('../database/config/db');
 
 dotenv.config(); // Carrega .env
 
@@ -25,11 +27,25 @@ exports.loginUser = async (req, res) => {
         const jwt_token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
 
         return res.status(200).json({
+            sucesso: 1,
             msg: "Autenticação realizada com sucesso!",
             token: jwt_token,
-            Name: user.Name,
-            Email: user.Email,
-            CompleteProfile: user.CompleteProfile // Indica se o perfil esta completo
+            data: {
+                Email: user.Email,
+                Name: user.Name,
+                Gender: user.Gender,
+                BirthDate: user.BirthDate,
+                Weight: user.Weight,
+                Height: user.Height,
+                ActvLevel: user.ActvLevel,
+                Goal: user.Goal,
+                ProtGoal: user.ProtGoal,
+                CarbGoal: user.CarbGoal,
+                FatGoal: user.FatGoal,
+                CaloriesGoal: user.CaloriesGoal,
+                StepsGoal: user.StepsGoal,
+                CompleteProfile: user.CompleteProfile,
+            }
         });
 
     } catch (error) {
@@ -49,34 +65,49 @@ exports.registerUser = async (req, res) => {
 
         const hashedPassword = await bcrypt.hash(Password, 10);
 
-        await User.create({
+        const newUser = await User.create({
             Name,
             Password: hashedPassword,
             Email
         });
 
-        res.status(200).send({ sucesso: 1, msg: "Cadastro realizado com sucesso!" });
+        // Gera o token JWT após o registro
+        const payload = { id: newUser.ID };
+        const jwt_token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: process.env.JWT_EXPIRATION });
+
+        res.status(200).send({ 
+            sucesso: 1, 
+            msg: "Cadastro realizado com sucesso!",
+            token: jwt_token,
+            data: {
+                Name: newUser.Name,
+                Email: newUser.Email,
+            }
+        });
     } catch (err) {
         res.status(500).send({ sucesso: 0, msg: "Erro BD: " + err.message });
     }
 };
 
 exports.completeUserProfile = async (req, res) => {
-    const { Email, ProtGoal, CarbGoal, FatGoal, CalGoal, Weight, Height, BirthDate, ActvLevel, Gender, Goal } = req.body;
-    // ALTERAR FITNESS LVL PARA ACTV LEVEL, INSERIR CAMPOS GENDER E GOAL
+    const { Email, ProtGoal, CarbGoal, FatGoal, CaloriesGoal, Weight, Height, BirthDate, ActvLevel, Gender, Goal } = req.body;
+    const User_ID = req.user.ID
+    const today = new Date().toLocaleDateString('en-CA');
+    const t = await sequelize.transaction();
+    
     try {
-        const user = await User.findOne({ where: { Email } });
+        const user = await User.findOne({ where: { Email } }, {transaction : t});
 
         if (!user) {
+            await t.rollback()
             return res.status(404).send({ sucesso: 0, msg: "Usuário não encontrado" });
         }
 
-        // Atualiza os dados do perfil
         await user.update({
             ProtGoal,
             CarbGoal,
             FatGoal,
-            CalGoal,
+            CaloriesGoal,
             Weight,
             Height,
             BirthDate,
@@ -84,24 +115,19 @@ exports.completeUserProfile = async (req, res) => {
             Gender,
             Goal,
             CompleteProfile: true
-        });
+        }, { transaction : t });
 
-        res.status(200).send({ sucesso: 1, msg: "Perfil complementado com sucesso!" });
+        await WeightUpdates.create({
+            User_ID,
+            Date: today,
+            Weight
+        }, { transaction : t });
+
+        await t.commit()
+        res.status(200).send({ sucesso: 1, msg: "Perfil complementado com sucesso!", CompleteProfile: true});
     } catch (err) {
+        await t.rollback()
         res.status(500).send({ sucesso: 0, msg: "Erro BD: " + err.message });
-    }
-};
-
-
-exports.editName = async (req, res) => {
-    const { Name } = req.body;
-
-    try {
-        await User.update({ Name }, { where: { ID: req.user.id } });
-
-        res.status(200).send({ sucesso: 1 });
-    } catch (err) {
-        res.status(500).send({ sucesso: 0, erro: "Erro BD: " + err.message });
     }
 };
 
@@ -148,3 +174,99 @@ exports.editPassword = async (req, res) => {
         res.status(500).send({ sucesso: 0, erro: "Erro BD: " + err.message });
     }
 };
+
+exports.updateUserProfile = async (req, res) => {
+    const { Name, ProtGoal, CarbGoal, FatGoal, CaloriesGoal, Height, BirthDate, ActvLevel, Gender, Goal } = req.body;
+
+    try {
+        const user = await User.findByPk(req.user.id);
+
+        if (!user) {
+            return res.status(404).send({ sucesso: 0, msg: "Usuário não encontrado" });
+        }
+
+        await user.update({
+            Name,
+            ProtGoal,
+            CarbGoal,
+            FatGoal,
+            CaloriesGoal,
+            Height,
+            BirthDate,
+            ActvLevel,
+            Gender,
+            Goal
+        });
+
+        res.status(200).send({ sucesso: 1, msg: "Perfil atualizado com sucesso!" });
+    } catch (err) {
+        res.status(500).send({ sucesso: 0, msg: "Erro BD: " + err.message });
+    }
+};
+
+exports.updateUserWeight = async (req, res) => {
+    const { Weight } = req.body;
+    const User_ID = req.user.ID;
+    const today = new Date().toLocaleDateString('en-CA'); // Obtém a data atual no formato YYYY-MM-DD
+    
+    try {
+        const user = await User.findByPk(User_ID);
+        
+        if (!user) {
+            return res.status(404).send({ sucesso: 0, msg: "Usuário não encontrado" });
+        }
+
+        await user.update({ Weight });
+
+        const existingWeight = await WeightUpdates.findOne({  // Verifica se já houve registro de peso no dia atual
+            where: {
+                User_ID,
+                Date: today
+            }
+        });
+
+        if (existingWeight) {
+            if (existingWeight.Weight === Weight) {
+                return res.status(200).send({ sucesso: 0, msg: "Nenhuma alteração no peso registrada." });
+            } else {
+                await existingWeight.update({ Weight });
+                return res.status(200).send({ sucesso: 1, msg: "Peso atualizado com sucesso!" });
+            }
+        } else {
+            await WeightUpdates.create({
+                User_ID,
+                Date: today,
+                Weight
+            });
+            return res.status(200).send({ sucesso: 1, msg: "Peso registrado com sucesso!" });
+        }
+
+    } catch (err) {
+        res.status(500).send({ sucesso: 0, msg: "Erro BD: " + err.message });
+    }
+};
+
+exports.getAllWeightUpdates = async (req,res) => {
+    const User_ID = req.user.ID
+    
+    try {
+        const user = await User.findByPk(User_ID);
+
+        if (!user) {
+            return res.status(404).send({ sucesso: 0, msg: "Usuário não encontrado" });
+        }
+
+        const allWeightUpdates = await WeightUpdates.findAll({
+            where: {User_ID},
+            order: [['Date', 'DESC']]
+        });
+
+        if(allWeightUpdates.length === 0){
+            return res.status(404).send({ sucesso: 0, msg: "Nenhuma atualização de peso encontrada"})
+        }
+
+        return res.status(200).send({sucesso: 1, data: allWeightUpdates})
+    } catch(err) {
+        res.status(500).send({ sucesso: 0, msg: "Erro BD: " + err.message });
+    }
+}

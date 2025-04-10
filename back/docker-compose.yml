@@ -1,0 +1,22 @@
+services:
+  fitapp_database:
+    image: postgres:14  # Especificar versão é uma boa prática
+    container_name: fitapp_database  # Nome personalizado para o container
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_USER=fitapp_db
+      - POSTGRES_PASSWORD=fitapp_db
+      - POSTGRES_DB=fitapp_db
+    volumes:
+      - postgres-data:/var/lib/postgresql/data  # Persistência de dados
+    restart: unless-stopped  # Política de reinício
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fitapp_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+# Volume para persistência
+volumes:
+  postgres-data:

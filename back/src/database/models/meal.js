@@ -25,17 +25,17 @@ const Meal = sequelize.define('Meal', {
     defaultValue: 0
   },
   Prot: {
-    type: DataTypes.FLOAT(4,1),
+    type: DataTypes.FLOAT,
     allowNull: false,
     defaultValue: 0
   },
   Carb: {
-    type: DataTypes.FLOAT(4,1),
+    type: DataTypes.FLOAT,
     allowNull: false,
     defaultValue: 0
   },
   Fat: {
-    type: DataTypes.FLOAT(4,1),
+    type: DataTypes.FLOAT,
     allowNull: false,
     defaultValue: 0
   },
