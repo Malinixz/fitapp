@@ -70,7 +70,7 @@ export default function WeightChart({ filteredUpdates } : WeightChartProps) {
         bezier
         style={{
           borderRadius: 8,
-          marginLeft: -18,
+          marginLeft: -16,
           marginTop: 8,
         }}
         onDataPointClick={(dataPoint) => {

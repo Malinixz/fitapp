@@ -6,6 +6,7 @@ import { useLocalSearchParams, useRouter } from 'expo-router';
 import axios from 'axios';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { Food } from '@/types/food.types';
+import GlobalStyles from '@/styles/GlobalStyles';
 
 export default function FoodSearchScreen() {
     const [searchQuery, setSearchQuery] = useState('');
@@ -130,7 +131,7 @@ export default function FoodSearchScreen() {
                                     <List.Item
                                         key={food.id}
                                         title={food.product_name || 'Nome não disponível'}
-                                        description={`${food.nutriments['energy-kcal_100g'] || 'N/A'} kcal, ${food.quantity || 'N/A'}`}
+                                        description={`${food.nutriments['energy-kcal_100g']?.toFixed(0) || 'N/A'} kcal, ${food.quantity || 'N/A'}`}
                                         left={(props) => (
                                             <Image
                                                 source={{ uri: food.image_url }}
@@ -168,10 +169,12 @@ export default function FoodSearchScreen() {
                             }
                         }}
                     />
+                    <View style={styles.scanLine} />
                     <View style={styles.closeButtonContainer}>
                         <Button
                             mode="contained"
                             onPress={() => setModalIsVisible(false)}
+                            style={GlobalStyles.button}
                         >
                             Fechar
                         </Button>
@@ -197,6 +200,16 @@ const styles = StyleSheet.create({
         height: 60,
         borderRadius: 5,
         marginLeft: 10,
+    },
+    scanLine: {
+        position: 'absolute',
+        height: 2, // espessura da linha
+        backgroundColor: 'red', // cor vermelha
+        left: 0,
+        right: 0,
+        top: '50%', // centralizada verticalmente
+        marginHorizontal: 40,
+        opacity: 0.5
     },
     listItemContainer: {
         backgroundColor: '#f0f0f0',

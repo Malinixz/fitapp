@@ -49,7 +49,7 @@ export default function CalIntakeChart({ filteredUpdates } : CalIntakeChartProps
         bezier
         style={{
           borderRadius: 8,
-          marginLeft: -18,
+          marginLeft: -16,
           marginTop: 8,
         }}
       />

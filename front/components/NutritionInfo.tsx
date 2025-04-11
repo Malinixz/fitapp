@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     marginTop: 16,
-    marginBottom: 16,
+    marginBottom: 12,
     textAlign:'center'
   },
   macrosContainer: {

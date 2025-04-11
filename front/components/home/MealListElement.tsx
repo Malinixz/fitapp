@@ -35,7 +35,7 @@ const MealListElement = ({ meal, showModal }: MealListElementProps) => {
 
   const handleUpdate = async () => {
     if (selectedFood) {
-      const newQuantity = Number(quantity)
+      const newQuantity = Number(quantity.replace(',','.'))
       const success = await updateFood(selectedFood.ID, newQuantity)
       if(success) {
         Alert.alert("Quantidade alterada com sucesso.")

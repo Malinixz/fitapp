@@ -3,24 +3,12 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-// const sequelize = new Sequelize(process.env.DATABASE_URL, {
-//   dialect: 'postgres',
-//   dialectOptions: {
-//     ssl: {
-//       require: true,
-//       rejectUnauthorized: false,
-//     },
-//   },
-// });
-
-// module.exports = sequelize;
-
 const sequelize = new Sequelize({
-  host: 'localhost',     
-  port: 5432,            
-  database: 'fitapp_db', 
-  username: 'fitapp_db', 
-  password: 'fitapp_db', 
+  host: process.env.DB_HOST,     
+  port: process.env.DB_PORT,            
+  database: process.env.DB_NAME, 
+  username: process.env.DB_USER, 
+  password: process.env.DB_PASSWORD, 
   dialect: 'postgres',
   dialectOptions: {
     ssl: false

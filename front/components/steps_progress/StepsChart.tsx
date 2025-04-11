@@ -61,7 +61,7 @@ export default function StepsChart({ filteredUpdates } : StepsChartProps) {
          style={{
            borderRadius: 8,
            marginTop: 8,
-           marginLeft:-18
+           marginLeft:-16
          }}
       />
 

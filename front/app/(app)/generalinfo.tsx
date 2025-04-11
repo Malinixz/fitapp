@@ -7,20 +7,23 @@ import { UserContext } from '@/contexts/UserContext';
 import { convertToDate } from '@/utils/Dates';
 import moment from 'moment';
 import { useRouter } from 'expo-router';
+import GlobalStyles from '@/styles/GlobalStyles';
+import { Colors } from '@/styles/Colors';
+import { calculateNutrition } from '@/utils/NutritionCalculator';
 
-export default function SignUp() {
-    const [selectedButton, setSelectedButton] = useState(null);
+export default function GeneralInfo() {
+    const [selectedButton, setSelectedButton] = useState('');
     const [birthDate, setBirthDate] = useState('');
     const [weight, setWeight] = useState('');
     const [height, setHeight] = useState('');
-    const { updateUser } = useContext(UserContext);
+    const { user, updateUser } = useContext(UserContext);
     const router = useRouter();
 
-    const handleButtonPress = (buttonTitle) => {
+    const handleButtonPress = (buttonTitle : string) => {
         setSelectedButton(buttonTitle);
     };
 
-    const handleContinue = () => {
+    const handleContinue = async () => {
         const parsedBirthDate = convertToDate(birthDate);
 
         if (!selectedButton || !birthDate || !weight || !height) {
@@ -33,10 +36,22 @@ export default function SignUp() {
             return;
         }
 
+        const updatedUser = {
+            ...user,
+            Gender: selectedButton[0],
+            BirthDate: parsedBirthDate,
+            Weight: parseFloat(weight),
+            Height: parseFloat(height)
+        }
+        const goals = calculateNutrition(updatedUser)
         updateUser('Gender', selectedButton[0]);
         updateUser('BirthDate', parsedBirthDate);
         updateUser('Weight', parseFloat(weight));
         updateUser('Height', parseFloat(height));
+        updateUser('CaloriesGoal', goals.calGoal);
+        updateUser('CarbGoal', goals.macrosGoal.carb);
+        updateUser('FatGoal', goals.macrosGoal.fat);
+        updateUser('ProtGoal', goals.macrosGoal.prot);
         router.push('/results');
     };
 
@@ -45,10 +60,9 @@ export default function SignUp() {
     return (
         <SafeAreaView style={styles.container}>
             <BackAppbar title="Informações Gerais" onPress={() => router.back()} />
-            <ProgressBar progress={0.8} />
+            <ProgressBar progress={0.8} color={Colors.green}/>
 
             <KeyboardAvoidingView
-                style={styles.container}
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 keyboardVerticalOffset={50}
             >
@@ -65,7 +79,13 @@ export default function SignUp() {
                                 onPress={() => handleButtonPress(title)}
                                 icon={
                                     selectedButton === title
-                                        ? () => <Icon source="check" size={20} />
+                                        ? () => <View style={{backgroundColor:'rgba(0, 128, 0, 0.7)', borderRadius:4}}>
+                                                    <Icon
+                                                        source="check"
+                                                        size={20}
+                                                        color='white'
+                                                    />
+                                                </View>
                                         : undefined
                                 }
                             >
@@ -112,9 +132,12 @@ export default function SignUp() {
                         keyboardType="numeric"
                     />
 
+                    <Text style={[GlobalStyles.subText, {marginTop:170}]}>
+                        Não se preocupe, futuramente você poderá alterar esses dados.
+                    </Text>
                     <Button
                         mode="contained"
-                        style={styles.continueButton}
+                        style={[GlobalStyles.button,{width:'70%', marginTop:50}]}
                         onPress={handleContinue}
                     >
                         Continuar
@@ -133,13 +156,15 @@ const styles = StyleSheet.create({
     content: {
         justifyContent: 'flex-start',
         alignItems: 'center',
-        padding: 20,
+        paddingVertical: 20,
     },
     guideText: {
-        fontSize: 18,
+        fontSize: 24,
         textAlign: 'center',
         marginTop: 30,
         marginBottom: 20,
+        fontWeight: 'bold',
+        marginHorizontal:20
     },
     button: {
         width: '40%',

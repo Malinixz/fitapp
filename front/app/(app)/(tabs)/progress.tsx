@@ -39,7 +39,7 @@ export default function weightprogress() {
     { label: "Passos", value: "Passos" },
   ]
   
-  // ??? CARREGA OS DADOS DE TODOS OS DIAS REGISTRADOS
+  // ???
   useEffect(() => {
     const loadCalData = async () => {
       const PUBLIC_API_URL = process.env.EXPO_PUBLIC_API_URL as string
@@ -58,9 +58,11 @@ export default function weightprogress() {
       }
     };
 
-    loadCalData()
+    if(chosenSheet === 'Passos' || chosenSheet === 'Calorias') {
+      loadCalData()
+    }
 
-  },[])
+  },[chosenSheet])
 
   useEffect(() => {
     if(param.chart){
@@ -178,7 +180,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.25,
+    shadowOpacity: 0.4,
     shadowRadius: 4,
     width: "100%",
   },

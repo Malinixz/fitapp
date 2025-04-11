@@ -1,21 +1,19 @@
 // screens/Results.tsx
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useState } from 'react';
 import { SafeAreaView, View, Text, StyleSheet, Alert } from 'react-native';
 import { Button, ProgressBar } from 'react-native-paper';
 import { BackAppbar } from '@/components/Appbar';
 import { UserContext } from '@/contexts/UserContext';
-import { calculateNutrition } from '@/utils/NutritionCalculator';
 import { useRouter } from 'expo-router';
 import MacrosPieChart from '@/components/MacrosPieChart'; // Importe o componente
+import { Colors } from '@/styles/Colors';
+import GlobalStyles from '@/styles/GlobalStyles';
+import { EditGoals } from '@/components/EditGoalsModal';
 
 export default function ResultScreen() {
-    const { user, updateUser, completeRegister } = useContext(UserContext);
+    const { user, completeRegister } = useContext(UserContext);
     const router = useRouter();
-    
-    useEffect(() => {
-        calculateNutrition(user, updateUser);
-    }, []);
-
+    const [modalVisible, setModalVisible] = useState(false);
     const handleCompleteRegister = async () => {
         try {
             const result = await completeRegister();
@@ -30,7 +28,7 @@ export default function ResultScreen() {
     return (
         <SafeAreaView style={styles.container}>
             <BackAppbar title="Resultado" onPress={() => router.back()} />
-            <ProgressBar progress={1} />
+            <ProgressBar progress={1} color={Colors.green}/>
 
             <View style={styles.content}>
                 <View style={styles.calorieGoalContainer}>
@@ -51,19 +49,21 @@ export default function ResultScreen() {
                 <Button
                     mode="contained-tonal"
                     style={styles.editButton}
-                    onPress={() => Alert.alert("Funcionalidade não implementada")}
+                    onPress={() => setModalVisible(true)}
                 >
                     Editar Metas
                 </Button>
                 <Button
                     mode="contained"
-                    style={styles.continueButton}
+                    style={[GlobalStyles.button,styles.continueButton]}
                     onPress={handleCompleteRegister}
                 >
                     Continuar
                 </Button>
             </View>
+            <EditGoals modalVisible={modalVisible} setModalVisible={setModalVisible}/>
         </SafeAreaView>
+
     );
 }
 

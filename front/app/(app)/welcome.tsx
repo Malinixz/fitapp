@@ -1,19 +1,19 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { SafeAreaView, View, Text, StyleSheet } from 'react-native';
 import { Button, ProgressBar } from 'react-native-paper';
 import { BackAppbar } from '@/components/Appbar';
 import { useRouter } from 'expo-router';
-import { UserContext } from '@/contexts/UserContext';
+import Styles from '@/styles/GlobalStyles';
+import { Colors } from '@/styles/Colors';
 
 export default function SignUp() {
     const router = useRouter();
-    const {user} = useContext(UserContext)
-    console.log(user)
+
     return (
         <SafeAreaView style={styles.container}>
             {/* Appbar Fixo no Topo */}
             <BackAppbar title="REGISTRE-SE" onPress={() => router.back()} />
-            <ProgressBar progress={0.15}/>
+            <ProgressBar progress={0.15} color={Colors.green}/>
             {/* Conteúdo Principal */}
             <View style={styles.content}>
                 <Text style={styles.welcomeText}>
@@ -21,7 +21,7 @@ export default function SignUp() {
                 </Text>
                 <Button
                     mode="contained"
-                    style={{width:'70%'}}
+                    style={[Styles.button,{width:'70%'}]}
                     onPress={() => router.push('/goals')}
                 >
                     Continuar
@@ -45,9 +45,10 @@ const styles = StyleSheet.create({
         marginTop: -56, // Ajusta a altura do Appbar
     },
     welcomeText: {
-        fontSize: 18,
+        fontSize: 24,
         textAlign: 'center',
         marginBottom: 20,
         color: '#333',
+        fontWeight:'bold'
     }
 });

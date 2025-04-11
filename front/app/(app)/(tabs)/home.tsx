@@ -11,6 +11,7 @@ import React, { useContext, useEffect, useState } from 'react';
  import { Meal } from '@/types/meal.types';
 import { Colors } from '@/styles/Colors';
 import { useRouter } from 'expo-router';
+import { Divider } from 'react-native-paper';
 
  const HomeScreen = () => {
     const { dayData, loadDayDataAPI } = useContext(DayContext);
@@ -52,7 +53,7 @@ import { useRouter } from 'expo-router';
                 </View>
                 <TouchableOpacity style={styles.dailyProgress} onPress={() => router.push({pathname: '/progress', params:{chart : 'Passos'}})}>
                     <Text style={styles.sectionTitle}>Caminhada</Text>
-                    <ProgressBar label="Passos" consumed={dayData.Steps} goal={dayData.StepsGoal} color="green" icon="shoe-sneaker"/>
+                    <ProgressBar label="Passos" consumed={dayData.Steps} goal={dayData.StepsGoal} color={Colors.green} icon="shoe-sneaker"/>
                 </TouchableOpacity>
                 <View style={styles.dailyProgress}>
                     <Text style={styles.sectionTitle}>Refeições</Text>
@@ -69,6 +70,10 @@ import { useRouter } from 'expo-router';
         >
             <View style={styles.modalContainer}>
                 <View style={styles.modalContent}>
+                    {selectedMeal && (
+                        <Text style={styles.modalTitle}>{selectedMeal.Name}</Text>
+                    )}
+                    <Divider/>
                     {selectedMeal && <NutritionInfo nutritionData={{
                      kcal: selectedMeal.Calories,
                      prot: selectedMeal.Prot,
@@ -108,7 +113,7 @@ import { useRouter } from 'expo-router';
     width: 0,
     height: 2,
    },
-   shadowOpacity: 0.25, // Opacidade da sombra
+shadowOpacity: 0.4, // Opacidade da sombra
    shadowRadius: 4,
    elevation: 5, // Para sombra no Android
   },
@@ -136,6 +141,13 @@ import { useRouter } from 'expo-router';
    fontSize: 20,
    fontWeight: 'bold',
    marginBottom: 10,
+  },
+  modalTitle: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    marginBottom: 15,
+    textAlign: 'center',
+    color: Colors.primary,
   },
  });
 

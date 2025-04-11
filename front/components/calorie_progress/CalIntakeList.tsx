@@ -8,6 +8,7 @@ import NutritionInfo from "../NutritionInfo";
 import { calculateCarbProtPercentage, calculateFatPercentage } from "@/utils/NutritionCalculator";
 import { useRouter } from "expo-router";
 import { DayContext } from "@/contexts/DayContext";
+import { Colors } from "@/styles/Colors";
 
 interface CalIntakeProps {
     daysData : Day[]
@@ -53,6 +54,10 @@ export default function CalIntakeList({ daysData } : CalIntakeProps) {
           >
               <View style={GlobalStyles.modalContainer}>
                   <View style={GlobalStyles.modalContent}>
+                      {selectedDay && (
+                          <Text style={styles.modalTitle}>{moment(selectedDay.Date).format("DD/MM/YYYY")}</Text>
+                      )}
+                      <Divider/>
                       {selectedDay && <NutritionInfo nutritionData={{
                           kcal: selectedDay.CaloriesTotal,
                           prot: selectedDay.ProtTotal,
@@ -107,5 +112,12 @@ const styles = StyleSheet.create({
   },
   divider: {
     marginVertical: 8,
+  },
+  modalTitle: {
+      fontSize: 22,
+      fontWeight: 'bold',
+      marginBottom: 15,
+      textAlign: 'center',
+      color: Colors.primary,
   },
 });

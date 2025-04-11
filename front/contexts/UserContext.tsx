@@ -4,8 +4,18 @@ import axios from 'axios';
 import { User } from "@/types/user.types";
 import { userService } from "@/services/userServices"
 
+interface UserContextType {
+  user: User;
+  login: (email: string, password: string) => Promise<{ success: boolean; completeProfile: boolean }>;
+  register: (email: string, name: string, password: string) => Promise<boolean>;
+  updateUser: (key: string, value: any) => void;
+  completeRegister: () => Promise<boolean>;
+  weightUpdates: { Date: string; Weight: number }[];
+  addWeightUpdate: (weight: number) => Promise<any>;
+}
+
 // Criação do contexto
-export const UserContext = createContext({});
+export const UserContext = createContext<UserContextType>({} as UserContextType);
 const PUBLIC_API_URL = process.env.EXPO_PUBLIC_API_URL as string
 
 // Provider que encapsula a lógica de estado e fornece acesso global

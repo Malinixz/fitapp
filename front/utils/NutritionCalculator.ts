@@ -1,16 +1,21 @@
 import { Food } from "@/types/food.types";
 import { Meal } from "@/types/meal.types";
+import { User } from "@/types/user.types";
 
-export function calculateNutrition( user, updateUser ) {
+export function calculateNutrition( user : User ) {
+    console.log('calculatenutrition')
+    console.log(user)
     const bmr = calculateBMR(user);
     const tdee = calculateTDEE(user, bmr);
     const calorieGoal = calculateCalorieGoal(user, tdee);
     const macroResults = calculateMacros(user, calorieGoal);
-
-    updateUser('CaloriesGoal', calorieGoal);
-    updateUser('CarbGoal', macroResults.carbs);
-    updateUser('FatGoal', macroResults.fat);
-    updateUser('ProtGoal', macroResults.protein);
+    return { 
+        calGoal : calorieGoal, 
+        macrosGoal : {
+            carb : macroResults.carbs,
+            fat : macroResults.fat,
+            prot : macroResults.protein
+        }}
 }
 
 const calculateBMR = (user: { BirthDate: string; Gender: string; Weight: number; Height: number; }) => {
@@ -90,7 +95,7 @@ export const getMealMacros = (Foods: Food[]) => {
     );
 };
 
-// Função para Calcular o Total de macros de uma refeição
+// Função para Calcular o Total de macros de um dia
 export const getDayMacros = (Meals: Meal[]) => {
     return Meals.reduce(
         (sum, meal) => ({

@@ -61,6 +61,14 @@ const styles = StyleSheet.create({
         width: "90%",
         padding: 20,
     },
+    subText: {
+        fontSize: 14,
+        textAlign: 'center',
+        marginTop: 34,
+        marginBottom: -30,
+        opacity:0.3,
+        fontWeight:'bold'
+    },
 });
 
 export default styles;
