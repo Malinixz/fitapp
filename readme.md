@@ -51,7 +51,7 @@ Esses dados são usados para compor o banco de alimentos presentes nas refeiçõ
 ### Clonando o Repositório
 
 ```bash
-git clone https://github.com/seu-usuario/fitapp.git
+git clone https://github.com/Malinixz/fitapp.git
 cd fitapp
 ```
 
